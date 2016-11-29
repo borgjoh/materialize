@@ -818,9 +818,17 @@ nav ul a span.badge {
 
 .left {
   float: left !important;
+
+  @include rtl{
+    float: right !important;
+  }
 }
 .right {
   float: right !important;
+
+  @include rtl{
+    float: left !important;
+  }
 }
 
 // No Text Select
