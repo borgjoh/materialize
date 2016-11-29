@@ -78,7 +78,8 @@ Package.onUse(function (api) {
     'sass/components/_typography.scss',
     'sass/components/_variables.scss',
     'sass/components/_waves.scss',
-    'sass/materialize.scss'
+    'sass/materialize.scss',
+    'sass/materialize-rtl.scss'
   ];
 
   api.addFiles(scssFiles, 'client');

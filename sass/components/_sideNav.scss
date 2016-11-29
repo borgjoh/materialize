@@ -16,6 +16,12 @@
   backface-visibility: hidden;
   transform: translateX(-105%);
 
+  @include rtl {
+    right: 0;
+    transform: translateX(100%);
+    transform: translateX(105%);
+  }
+
   @extend .z-depth-1;
 
   // Right Align
@@ -24,6 +30,12 @@
     transform: translateX(105%);
     left: auto;
     transform: translateX(100%);
+
+    @include rtl {
+      left: 0;
+      transform: translateX(-100%);
+      transform: translateX(-105%);
+    }
   }
 
   .collapsible {
@@ -72,6 +84,11 @@
     margin: 0 ($sidenav-padding * 2) 0 0;
     width: $sidenav-item-height / 2;
     color: rgba(0,0,0,.54);
+
+    @include rtl {
+      float: right;
+      margin: 0 0 0 ($sidenav-padding * 2);
+    }
   }
 
   .divider {
@@ -156,10 +173,20 @@
   transform: translateX(0);
   position: fixed;
 
+  @include rtl {
+    right: 0;
+    left: auto;
+  }
+
   // Right Align
   &.right-aligned {
     right: 0;
     left: auto;
+
+      @include rtl {
+        left: 0;
+        right: auto;
+      }
   }
 }
 
@@ -168,9 +195,17 @@
   .side-nav {
     &.fixed {
       transform: translateX(-105%);
+      
+      @include rtl {
+        transform: translateX(105%);
+      }
 
       &.right-aligned {
         transform: translateX(105%);
+
+        @include rtl {
+          transform: translateX(-105%);
+        }
       }
     }
 

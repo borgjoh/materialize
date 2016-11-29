@@ -18,7 +18,7 @@ module.exports = function(grunt) {
             'node_modules/jquery/dist/jquery.min.js',
             'node_modules/jasmine-jquery/lib/jasmine-jquery.js'
           ],
-          styles: 'bin/materialize.css',
+          styles: 'bin/*.css',
           specs: 'tests/spec/**/*Spec.js',
           helpers: 'tests/spec/helper.js',
           keepRunner : true,
@@ -38,6 +38,7 @@ module.exports = function(grunt) {
         },
         files: {
           'dist/css/materialize.css': 'sass/materialize.scss',
+          'dist/css/materialize-rtl.css': 'sass/materialize-rtl.scss'
         }
       },
 
@@ -48,6 +49,7 @@ module.exports = function(grunt) {
         },
         files: {
           'dist/css/materialize.min.css': 'sass/materialize.scss',
+          'dist/css/materialize-rtl.min.css': 'sass/materialize-rtl.scss',
         }
       },
 
@@ -59,6 +61,7 @@ module.exports = function(grunt) {
         },
         files: {
           'css/ghpages-materialize.css': 'sass/ghpages-materialize.scss',
+          'css/ghpages-materialize-rtl.css': 'sass/ghpages-materialize-rtl.scss',
         }
       },
 
@@ -70,6 +73,7 @@ module.exports = function(grunt) {
         },
         files: {
           'bin/materialize.css': 'sass/materialize.scss',
+          'bin/materialize-rtl.css': 'sass/materialize-rtl.scss',
         }
       }
     },
@@ -89,16 +93,16 @@ module.exports = function(grunt) {
         ]
       },
       expended: {
-        src: 'dist/css/materialize.css'
+        src: 'dist/css/*.css'
       },
       min: {
-        src: 'dist/css/materialize.min.css'
+        src: 'dist/css/*.min.css'
       },
       gh: {
-        src: 'css/ghpages-materialize.css'
+        src: 'css/*.css'
       },
       bin: {
-        src: 'bin/materialize.css'
+        src: 'bin/*.css'
       }
     },
 
@@ -249,6 +253,7 @@ module.exports = function(grunt) {
         files:[
           {expand: true, cwd: 'fonts/', src: ['**/*'], dest: 'materialize-src/fonts/'},
           {expand: true, cwd: 'sass/', src: ['materialize.scss'], dest: 'materialize-src/sass/'},
+          {expand: true, cwd: 'sass/', src: ['materialize-rtl.scss'], dest: 'materialize-src/sass/'},
           {expand: true, cwd: 'sass/', src: ['components/**/*'], dest: 'materialize-src/sass/'},
           {expand: true, cwd: 'js/', src: [
             "initial.js",

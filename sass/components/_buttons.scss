@@ -100,12 +100,22 @@
     &.left {
       right: auto;
       left: 24px;
+
+      @include rtl {
+        right: 24px;
+        left: auto;
+      }
     }
 
     position: absolute;
     right: 24px;
     bottom: 0;
     transform: translateY(50%);
+
+    @include rtl{
+      right: auto;
+      left: 24px;
+    }
   }
 
   display: inline-block;
@@ -150,6 +160,10 @@ button.btn-floating {
   &.horizontal {
     padding: 0 0 0 15px;
 
+    @include rtl {
+      padding: 0 15px 0 0;
+    }
+
     ul {
       text-align: right;
       right: 64px;
@@ -159,9 +173,19 @@ button.btn-floating {
       left: auto;
       width: 500px; /*width 100% only goes to width of button container */
 
+      @include rtl {
+        text-align: left;
+        left: 64px;
+        right: auto;
+      }
+
       li {
         display: inline-block;
         margin: 15px 15px 0 0;
+
+        @include rtl{
+          margin: 15px 0 0 15px;
+        }
       }
     }
   }
@@ -215,6 +239,11 @@ button.btn-floating {
   margin-bottom: 0;
   z-index: 998;
 
+  @include rtl{
+    left: 23px;
+    right: auto;
+  }
+
   ul {
     left: 0;
     right: 0;
@@ -243,6 +272,11 @@ button.btn-floating {
     background-color: $button-floating-background;
     border-radius: $button-floating-radius;
     transform: scale(0);
+
+    @include rtl{
+      left: auto;
+      right: 0;
+    }
   }
 }
 

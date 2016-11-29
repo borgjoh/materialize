@@ -9,6 +9,7 @@
         draggable: true
       };
       options = $.extend(defaults, options);
+      dir = $("html").attr('dir');
 
       $(this).each(function(){
         var $this = $(this);
@@ -30,18 +31,26 @@
 
         if (options.edge == 'left') {
           menu_id.css('transform', 'translateX(-100%)');
+          if (dir == 'rtl') { menu_id.css('transform', 'translateX(105%)'); }
           $dragTarget.css({'left': 0}); // Add Touch Area
+          if (dir == 'rtl') { $dragTarget.css({'left': '', right: 0}); }
         }
         else {
           menu_id.addClass('right-aligned') // Change text-alignment to right
             .css('transform', 'translateX(100%)');
           $dragTarget.css({'right': 0}); // Add Touch Area
+          if (dir == 'rtl') { 
+            menu_id.css('transform', 'translateX(-100%)'); 
+            $dragTarget.css({'right': '', left: 0});
+          }
+
         }
 
         // If fixed sidenav, bring menu out
         if (menu_id.hasClass('fixed')) {
             if (window.innerWidth > 992) {
-              menu_id.css('transform', 'translateX(0)');
+              transValue = 'translateX(0)';
+              menu_id.css('transform', transValue);
             }
           }
 
@@ -56,14 +65,17 @@
               else {
                 // menu_id.removeAttr('style');
                 menu_id.css('transform', 'translateX(0%)');
+                //if (dir == 'rtl') { menu_id.css('transform', 'translateX(100%)'); }
                 // menu_id.css('width', options.menuWidth);
               }
             }
             else if (menuOut === false){
               if (options.edge === 'left') {
                 menu_id.css('transform', 'translateX(-100%)');
+                if (dir == 'rtl'){ menu_id.css('transform', 'translateX(100%)'); }
               } else {
                 menu_id.css('transform', 'translateX(100%)');
+                if (dir == 'rtl'){ menu_id.css('transform', 'translateX(-100%)'); }
               }
 
             }
@@ -94,9 +106,14 @@
             } });
           if (options.edge === 'left') {
             // Reset phantom div
+            translateXValue = '-100%';
             $dragTarget.css({width: '', right: '', left: '0'});
+            if (dir == 'rtl') { 
+              translateXValue = '100%'; 
+              $dragTarget.css({width: '', right: '0', left: ''});
+            }
             menu_id.velocity(
-              {'translateX': '-100%'},
+              {'translateX': translateXValue},
               { duration: 200,
                 queue: false,
                 easing: 'easeOutCubic',
@@ -112,9 +129,14 @@
           }
           else {
             // Reset phantom div
+            translateXValue = '100%';
             $dragTarget.css({width: '', right: '0', left: ''});
+            if (dir == 'rtl') { 
+              translateXValue = '-100%'; 
+              $dragTarget.css({width: '', right: '', left: '0'});
+            }
             menu_id.velocity(
-              {'translateX': '100%'},
+              {'translateX': translateXValue},
               { duration: 200,
                 queue: false,
                 easing: 'easeOutCubic',
@@ -308,10 +330,18 @@
             if (options.edge === 'left') {
               $dragTarget.css({width: '50%', right: 0, left: ''});
               menu_id.velocity({'translateX': [0, -1 * options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
+              if (dir == 'rtl'){
+                $dragTarget.css({width: '50%', right: '', left: 0});
+                menu_id.velocity({'translateX': [0, options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
+              }
             }
             else {
               $dragTarget.css({width: '50%', right: '', left: 0});
               menu_id.velocity({'translateX': [0, options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
+              if (dir == 'rtl'){
+                $dragTarget.css({width: '50%', right: 0, left: ''});
+                menu_id.velocity({'translateX': [0, -1 * options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
+              }
             }
 
             $overlay.css('opacity', 0)

@@ -1,0 +1,13 @@
+// LTR / RTL Contents
+// ------------------------------------------
+@mixin ltr {
+  @if $app-direction == ltr {
+    @content;
+  }
+}
+
+@mixin rtl {
+  @if $app-direction == rtl {
+    @content;
+  }
+}
