@@ -5586,6 +5586,8 @@ button.btn-floating {
   height: 32px;
   width: 32px;
   border-radius: 50%;
+  float: right;
+  margin: 0 -12px 0 8px;
 }
 
 .chip .close {
@@ -5594,6 +5596,9 @@ button.btn-floating {
   font-size: 16px;
   line-height: 32px;
   padding-left: 8px;
+  float: left;
+  padding-right: 8px;
+  padding-left: 0;
 }
 
 .chips {
@@ -5643,6 +5648,8 @@ button.btn-floating {
   margin-left: 3rem;
   width: 92%;
   width: calc(100% - 3rem);
+  margin-left: 0;
+  margin-right: 3rem;
 }
 
 .chips:empty ~ label {
