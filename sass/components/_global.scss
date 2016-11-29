@@ -686,6 +686,11 @@ nav ul a span.badge {
     bottom: 0;
     background-color: $progress-bar-color;
     transition: width .3s linear;
+
+    @include rtl{
+      left: auto;
+      right: 0;
+    }
   }
   .indeterminate {
     background-color: $progress-bar-color;
@@ -700,6 +705,12 @@ nav ul a span.badge {
       // Custom bezier
       animation: indeterminate 2.1s cubic-bezier(0.650, 0.815, 0.735, 0.395) infinite;
 
+      @include rtl{
+        left: auto;
+        right: 0;
+        will-change: right, left;
+      }
+
     }
     &:after {
       content: '';
@@ -712,6 +723,12 @@ nav ul a span.badge {
       // Custom bezier
       animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.840, 0.440, 1.000) infinite;
       animation-delay: 1.15s;
+
+      @include rtl{
+        left: auto;
+        right: 0;
+        will-change: right, left;
+      }
     }
   }
 }
@@ -730,6 +747,23 @@ nav ul a span.badge {
     }
 }
 
+@include rtl{
+  @keyframes indeterminate{
+    0% {
+      left: 100%;
+      right: -90%;
+    }
+    60% {
+      left: 100%;
+      right: -90%;
+    }
+    100% {
+      left: -35%;
+      right:100%;
+    }
+  }
+}
+
 @keyframes indeterminate-short {
     0% {
       left: -200%;
@@ -743,6 +777,23 @@ nav ul a span.badge {
       left: 107%;
       right: -8%;
     }
+}
+
+@include rtl{
+  @keyframes indeterminate-short {
+      0% {
+        left: 107%;
+        right: -8%;
+      }
+      60% {
+        left: 107%;
+        right: -8%;
+      }
+      100% {
+        left: -200%;
+        right: 100%;
+      }
+  }
 }
 
 
