@@ -21,6 +21,10 @@
     text-align: left;
     text-transform: none;
 
+    @include rtl{
+      text-align: right;
+    }
+
     &:hover, &.active, &.selected {
       background-color: $dropdown-hover-bg-color;
     }

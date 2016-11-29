@@ -5219,6 +5219,7 @@ button.btn-floating {
   width: 100%;
   text-align: left;
   text-transform: none;
+  text-align: right;
 }
 
 .dropdown-content li:hover, .dropdown-content li.active, .dropdown-content li.selected {
