@@ -53,6 +53,11 @@
         width: 70%;
         opacity: 0;
 
+        @include rtl{
+          left: auto;
+          right: 15%;
+        }
+
         p { color: $slider-bg-color-light; }
       }
 

@@ -4726,6 +4726,8 @@ small {
     left: 5%;
     bottom: 7%;
     max-width: 90%;
+    left: auto;
+    right: 5%;
   }
 }
 
@@ -4734,6 +4736,8 @@ small {
     top: 10%;
     right: 7%;
     max-width: 86%;
+    right: auto;
+    left: 7%;
   }
 }
 
@@ -4768,6 +4772,8 @@ small {
 .toast .btn, .toast .btn-large, .toast .btn-flat {
   margin: 0;
   margin-left: 3rem;
+  margin: 0;
+  margin-right: 3rem;
 }
 
 .toast.rounded {
@@ -4784,12 +4790,14 @@ small {
 @media only screen and (min-width: 601px) and (max-width: 992px) {
   .toast {
     float: left;
+    float: right;
   }
 }
 
 @media only screen and (min-width: 993px) {
   .toast {
     float: right;
+    float: left;
   }
 }
 
@@ -6958,18 +6966,28 @@ input[type=range]:focus::-ms-fill-upper {
   line-height: 1.5rem;
   letter-spacing: .4;
   display: inline-block;
+  padding-left: 0;
+  padding-right: 20px;
 }
 
 .table-of-contents a:hover {
   color: #a8a8a8;
   padding-left: 19px;
   border-left: 1px solid #ea4a4f;
+  padding-right: 19px;
+  border-right: 1px solid #ea4a4f;
+  padding-left: 0;
+  border-left: 0;
 }
 
 .table-of-contents a.active {
   font-weight: 500;
   padding-left: 18px;
   border-left: 2px solid #ea4a4f;
+  padding-right: 18px;
+  border-right: 2px solid #ea4a4f;
+  padding-left: 0;
+  border-left: 0;
 }
 
 .side-nav {
@@ -7777,6 +7795,8 @@ input[type=range]:focus::-ms-fill-upper {
   left: 15%;
   width: 70%;
   opacity: 0;
+  left: auto;
+  right: 15%;
 }
 
 .slider .slides li .caption p {
