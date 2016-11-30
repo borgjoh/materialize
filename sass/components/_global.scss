@@ -107,6 +107,13 @@ blockquote {
   margin: 20px 0;
   padding-left: 1.5rem;
   border-left: 5px solid $primary-color;
+
+  @include rtl{
+    padding-left: 0;
+    padding-right: 1.5rem;
+    border-left: 0;
+    border-right: 5px solid $primary-color;
+  }
 }
 
 // Icon Styles
@@ -117,10 +124,22 @@ i {
   &.left {
     float: left;
     margin-right: 15px;
+
+    @include rtl{
+      float: right;
+      margin-right: 0;
+      margin-left: 15px;
+    }
   }
   &.right {
     float: right;
     margin-left: 15px;
+
+    @include rtl{
+      float: left;
+      margin-left: 0;
+      margin-right: 15px;
+    }
   }
   &.tiny {
     font-size: 1rem;
@@ -211,6 +230,10 @@ video.responsive-video {
     display: inline-block;
     float: left;
     font-size: 24px;
+
+    @include rtl{
+      float: right;
+    }
   }
 
   &:before {
@@ -224,6 +247,10 @@ video.responsive-video {
     font-size: 25px;
     margin: 0 10px 0 8px;
     -webkit-font-smoothing: antialiased;
+
+    @include rtl{
+      //content: '\E5CB';
+    }
   }
 
   &:first-child:before {
@@ -261,6 +288,11 @@ video.responsive-video {
     -webkit-transform: translate3d(0,0,0);
             transform: translate3d(0,0,0);
     transform: translateX(-50%);
+
+    @include rtl{
+      left: auto;
+      right: 50%;
+    }
   }
 }
 
@@ -412,6 +444,10 @@ td, th{
   text-align: left;
   vertical-align: middle;
   border-radius: 2px;
+
+  @include rtl{
+    text-align: right;
+  }
 }
 
 // Responsive Table
@@ -434,10 +470,20 @@ td, th{
       vertical-align: top;
     }
 
-    th { text-align: left; }
+    th { 
+      text-align: left;
+
+      @include rtl{
+        text-align: right;
+      } 
+    }
     thead {
       display: block;
       float: left;
+
+      @include rtl{
+        float: right;
+      }
 
       tr {
         display: block;
@@ -463,11 +509,19 @@ td, th{
     th {
       display: block;
       text-align: right;
+
+      @include rtl{
+        text-align: left;
+      }
     }
     td {
       display: block;
       min-height: 1.25em;
       text-align: left;
+
+      @include rtl{
+        text-align: right;
+      }
     }
     tr { padding: 0 10px; }
 
@@ -475,13 +529,33 @@ td, th{
     thead {
       border: 0;
       border-right: 1px solid $table-border-color;
+
+      @include rtl{
+        border: 0;
+        border-left: 1px solid $table-border-color;
+      }
     }
 
     &.bordered {
-      th { border-bottom: 0; border-left: 0; }
+      th { 
+        border-bottom: 0; 
+        border-left: 0;
+
+        @include rtl{
+          bottom-right: 0;
+        }
+
+      }
       td { border-left: 0; border-right: 0; border-bottom: 0; }
       tr { border: 0; }
-      tbody tr { border-right: 1px solid $table-border-color; }
+      tbody tr { 
+        border-right: 1px solid $table-border-color;
+
+        @include rtl{
+          border-right: 0;
+          border-left: 1px solid $table-border-color;
+        }
+      }
     }
 
   }
@@ -510,6 +584,11 @@ td, th{
       padding-left: 72px;
       position: relative;
 
+      @include rtl{
+        padding-left: 0;
+        padding-right: 72px;
+      }
+
       .circle {
         position: absolute;
         width: 42px;
@@ -518,6 +597,11 @@ td, th{
         left: 15px;
         display: inline-block;
         vertical-align: middle;
+
+        @include rtl{
+          left: auto;
+          right: 15px;
+        }
       }
       i.circle {
         font-size: 18px;
@@ -540,6 +624,11 @@ td, th{
         position: absolute;
         top: 16px;
         right: 16px;
+
+        @include rtl{
+          right: auto;
+          left: 16px;
+        }
       }
 
     }
@@ -577,9 +666,19 @@ td, th{
     }
     .collection-item {
       padding-left: 30px;
+
+      @include rtl{
+        padding-left: 0;
+        padding-right: 30px;
+      }
     }
     .collection-item.avatar {
       padding-left: 72px;
+
+      @include rtl{
+        padding-left: 0;
+        padding-right: 72px;
+      }
     }
   }
 
@@ -588,6 +687,10 @@ td, th{
 .secondary-content {
   float: right;
   color: $secondary-color;
+
+  @include rtl{
+    float: left;
+  }
 }
 .collapsible .collection {
   margin: 0;
@@ -607,6 +710,12 @@ span.badge {
   color: color('grey', 'darken-1');
   float: right;
   box-sizing: border-box;
+
+  @include rtl{
+    margin-left: 0;
+    margin-right: 14px;
+    float: left;
+  }
 
   &.new {
     font-weight: 300;
@@ -629,6 +738,11 @@ nav ul a span.badge {
   margin-left: 4px;
   line-height: 22px;
   height: 22px;
+
+  @include rtl{
+    margin-left: 0;
+    margin-right: 4px;
+  }
 }
 .side-nav span.badge.new,
 .collapsible span.badge.new {
@@ -666,6 +780,11 @@ nav ul a span.badge {
       left: 0;
       width: 100%;
       height: 100%;
+
+      @include rtl{
+        left: auto;
+        right: 0;
+      }
     }
 }
 
@@ -808,9 +927,17 @@ nav ul a span.badge {
 // Text Align
 .left-align {
   text-align: left;
+
+  @include rtl{
+    text-align: right;
+  }
 }
 .right-align {
-  text-align: right
+  text-align: right;
+
+  @include rtl{
+    text-align: left;
+  }
 }
 .center, .center-align {
   text-align: center;

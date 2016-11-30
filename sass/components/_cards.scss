@@ -134,6 +134,11 @@
       bottom: 0;
       left: 0;
       padding: $card-padding;
+
+      @include rtl{
+        left: auto;
+        right: 0;
+      }
     }
   }
 
