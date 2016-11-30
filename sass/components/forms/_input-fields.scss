@@ -129,6 +129,11 @@ textarea.materialize-textarea {
     vertical-align: middle;
     margin-left: 5px;
 
+    @include rtl{
+      margin-left: 0;
+      margin-right: 5px;
+    }
+
     input,
     .select-dropdown {
       margin-bottom: 1rem;
@@ -139,6 +144,11 @@ textarea.materialize-textarea {
   &.col {
     label {
       left: $gutter-width / 2;
+
+      @include rtl{
+        left: auto;
+        right: $gutter-width / 2;
+      }
     }
 
     .prefix ~ label,
@@ -158,6 +168,10 @@ textarea.materialize-textarea {
     font-size: 1rem;
     cursor: text;
     transition: .2s ease-out;
+
+    @include rtl{
+      right: 0;
+    }
 
     &:not(.label-icon).active {
       font-size: $label-font-size;
@@ -183,6 +197,11 @@ textarea.materialize-textarea {
     margin-left: 3rem;
     width: 92%;
     width: calc(100% - 3rem);
+
+    @include rtl{
+      margin-left: 0;
+      margin-right: 3rem;
+    }
   }
 
   .prefix ~ label { margin-left: 3rem; }
@@ -211,6 +230,11 @@ textarea.materialize-textarea {
   padding-left: 4rem;
   width: calc(100% - 4rem);
 
+  @include rtl{
+    padding-left: 0;
+    padding-right: 4rem;
+  }
+
   &:focus {
     background-color: $input-background;
     border: 0;
@@ -226,6 +250,11 @@ textarea.materialize-textarea {
 
   & + label {
     left: 1rem;
+
+    @include rtl{
+      left: 0;
+      right: 1rem;
+    }
   }
 
   & ~ .mdi-navigation-close,
@@ -237,6 +266,11 @@ textarea.materialize-textarea {
     cursor: pointer;
     font-size: 2rem;
     transition: .3s color;
+
+    @include rtl{
+      right: 0;
+      left: 1rem;
+    }
   }
 }
 

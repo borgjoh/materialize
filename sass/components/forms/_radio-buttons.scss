@@ -7,6 +7,11 @@
   position: absolute;
   left: -9999px;
   opacity: 0;
+
+  @include rtl {
+    left: auto;
+    right: -9999px;
+  }
 }
 
 [type="radio"]:not(:checked) + label,
@@ -19,6 +24,11 @@
   line-height: 25px;
   font-size: 1rem;
   transition: .28s ease;
+
+  @include rtl{
+    padding-left: 0;
+    padding-right: 35px;
+  }
 
   -khtml-user-select: none; /* webkit (konqueror) browsers */
   user-select: none;
@@ -35,6 +45,11 @@
   height: 16px;
   z-index: 0;
   transition: .28s ease;
+
+  @include rtl{
+    left: auto;
+    right: 0;
+  }
 }
 
 /* Unchecked styles */
