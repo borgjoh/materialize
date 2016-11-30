@@ -21,7 +21,7 @@
     text-align: left;
     text-transform: none;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       text-align: right;
     }
 

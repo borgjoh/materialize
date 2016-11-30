@@ -129,7 +129,7 @@ textarea.materialize-textarea {
     vertical-align: middle;
     margin-left: 5px;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       margin-left: 0;
       margin-right: 5px;
     }
@@ -145,7 +145,7 @@ textarea.materialize-textarea {
     label {
       left: $gutter-width / 2;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         left: auto;
         right: $gutter-width / 2;
       }
@@ -169,7 +169,7 @@ textarea.materialize-textarea {
     cursor: text;
     transition: .2s ease-out;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       right: 0;
     }
 
@@ -198,7 +198,7 @@ textarea.materialize-textarea {
     width: 92%;
     width: calc(100% - 3rem);
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       margin-left: 0;
       margin-right: 3rem;
     }
@@ -230,7 +230,7 @@ textarea.materialize-textarea {
   padding-left: 4rem;
   width: calc(100% - 4rem);
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     padding-left: 0;
     padding-right: 4rem;
   }
@@ -251,7 +251,7 @@ textarea.materialize-textarea {
   & + label {
     left: 1rem;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: 0;
       right: 1rem;
     }
@@ -267,7 +267,7 @@ textarea.materialize-textarea {
     font-size: 2rem;
     transition: .3s color;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       right: 0;
       left: 1rem;
     }

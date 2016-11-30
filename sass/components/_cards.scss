@@ -135,7 +135,7 @@
       left: 0;
       padding: $card-padding;
 
-      @include rtl{
+      :host-context([dir="rtl"]) &{
         left: auto;
         right: 0;
       }

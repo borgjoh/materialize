@@ -101,7 +101,7 @@
       right: auto;
       left: 24px;
 
-      @include rtl {
+      :host-context([dir="rtl"]) & {
         right: 24px;
         left: auto;
       }
@@ -112,7 +112,7 @@
     bottom: 0;
     transform: translateY(50%);
 
-    @include rtl{
+    :host-context([dir="rtl"]) &{
       right: auto;
       left: 24px;
     }
@@ -160,7 +160,7 @@ button.btn-floating {
   &.horizontal {
     padding: 0 0 0 15px;
 
-    @include rtl {
+    :host-context([dir="rtl"]) & {
       padding: 0 15px 0 0;
     }
 
@@ -173,7 +173,7 @@ button.btn-floating {
       left: auto;
       width: 500px; /*width 100% only goes to width of button container */
 
-      @include rtl {
+      :host-context([dir="rtl"]) & {
         text-align: left;
         left: 64px;
         right: auto;
@@ -183,7 +183,7 @@ button.btn-floating {
         display: inline-block;
         margin: 15px 15px 0 0;
 
-        @include rtl{
+        :host-context([dir="rtl"]) &{
           margin: 15px 0 0 15px;
         }
       }
@@ -239,7 +239,7 @@ button.btn-floating {
   margin-bottom: 0;
   z-index: 998;
 
-  @include rtl{
+  :host-context([dir="rtl"]) &{
     left: 23px;
     right: auto;
   }
@@ -273,7 +273,7 @@ button.btn-floating {
     border-radius: $button-floating-radius;
     transform: scale(0);
 
-    @include rtl{
+    :host-context([dir="rtl"]) &{
       left: auto;
       right: 0;
     }

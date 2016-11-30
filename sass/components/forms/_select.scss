@@ -47,7 +47,7 @@ select {
     font-size: 10px;
     line-height: 10px;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: 0;
       right: auto;
     }
@@ -95,7 +95,7 @@ select:disabled {
   width: 92%;
   width: calc(100% - 3rem);
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     margin-left: 0;
     margin-right: 3rem;
   }
@@ -104,7 +104,7 @@ select:disabled {
 .prefix ~ label { 
   margin-left: 3rem;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     margin-left: 0;
     margin-right: 3rem;
   } 
@@ -118,7 +118,7 @@ select:disabled {
     margin: 5px 15px;
     float: right;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       float: left;
     }
   }
@@ -139,7 +139,7 @@ select:disabled {
   & ~ li.optgroup-option {
     padding-left: 1rem;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       padding-left: 0;
       padding-right: 1rem;
     }

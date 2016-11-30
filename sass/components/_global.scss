@@ -22,7 +22,7 @@ ul {
     padding-left: 0;
     list-style-type: none;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       padding-left: auto;
       padding-right: 0;
     }
@@ -108,7 +108,7 @@ blockquote {
   padding-left: 1.5rem;
   border-left: 5px solid $primary-color;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     padding-left: 0;
     padding-right: 1.5rem;
     border-left: 0;
@@ -125,7 +125,7 @@ i {
     float: left;
     margin-right: 15px;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       float: right;
       margin-right: 0;
       margin-left: 15px;
@@ -135,7 +135,7 @@ i {
     float: right;
     margin-left: 15px;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       float: left;
       margin-left: 0;
       margin-right: 15px;
@@ -231,7 +231,7 @@ video.responsive-video {
     float: left;
     font-size: 24px;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       float: right;
     }
   }
@@ -248,7 +248,7 @@ video.responsive-video {
     margin: 0 10px 0 8px;
     -webkit-font-smoothing: antialiased;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       //content: '\E5CB';
     }
   }
@@ -289,7 +289,7 @@ video.responsive-video {
             transform: translate3d(0,0,0);
     transform: translateX(-50%);
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 50%;
     }
@@ -445,7 +445,7 @@ td, th{
   vertical-align: middle;
   border-radius: 2px;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     text-align: right;
   }
 }
@@ -473,7 +473,7 @@ td, th{
     th { 
       text-align: left;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         text-align: right;
       } 
     }
@@ -481,7 +481,7 @@ td, th{
       display: block;
       float: left;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         float: right;
       }
 
@@ -510,7 +510,7 @@ td, th{
       display: block;
       text-align: right;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         text-align: left;
       }
     }
@@ -519,7 +519,7 @@ td, th{
       min-height: 1.25em;
       text-align: left;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         text-align: right;
       }
     }
@@ -530,7 +530,7 @@ td, th{
       border: 0;
       border-right: 1px solid $table-border-color;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         border: 0;
         border-left: 1px solid $table-border-color;
       }
@@ -541,7 +541,7 @@ td, th{
         border-bottom: 0; 
         border-left: 0;
 
-        @include rtl{
+        :host-context([dir="rtl"]) & {
           bottom-right: 0;
         }
 
@@ -551,7 +551,7 @@ td, th{
       tbody tr { 
         border-right: 1px solid $table-border-color;
 
-        @include rtl{
+        :host-context([dir="rtl"]) & {
           border-right: 0;
           border-left: 1px solid $table-border-color;
         }
@@ -584,7 +584,7 @@ td, th{
       padding-left: 72px;
       position: relative;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         padding-left: 0;
         padding-right: 72px;
       }
@@ -598,7 +598,7 @@ td, th{
         display: inline-block;
         vertical-align: middle;
 
-        @include rtl{
+        :host-context([dir="rtl"]) & {
           left: auto;
           right: 15px;
         }
@@ -625,7 +625,7 @@ td, th{
         top: 16px;
         right: 16px;
 
-        @include rtl{
+        :host-context([dir="rtl"]) & {
           right: auto;
           left: 16px;
         }
@@ -667,7 +667,7 @@ td, th{
     .collection-item {
       padding-left: 30px;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         padding-left: 0;
         padding-right: 30px;
       }
@@ -675,7 +675,7 @@ td, th{
     .collection-item.avatar {
       padding-left: 72px;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         padding-left: 0;
         padding-right: 72px;
       }
@@ -688,7 +688,7 @@ td, th{
   float: right;
   color: $secondary-color;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     float: left;
   }
 }
@@ -711,7 +711,7 @@ span.badge {
   float: right;
   box-sizing: border-box;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     margin-left: 0;
     margin-right: 14px;
     float: left;
@@ -739,7 +739,7 @@ nav ul a span.badge {
   line-height: 22px;
   height: 22px;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     margin-left: 0;
     margin-right: 4px;
   }
@@ -781,7 +781,7 @@ nav ul a span.badge {
       width: 100%;
       height: 100%;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         left: auto;
         right: 0;
       }
@@ -806,7 +806,7 @@ nav ul a span.badge {
     background-color: $progress-bar-color;
     transition: width .3s linear;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 0;
     }
@@ -824,7 +824,7 @@ nav ul a span.badge {
       // Custom bezier
       animation: indeterminate 2.1s cubic-bezier(0.650, 0.815, 0.735, 0.395) infinite;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         left: auto;
         right: 0;
         will-change: right, left;
@@ -843,7 +843,7 @@ nav ul a span.badge {
       animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.840, 0.440, 1.000) infinite;
       animation-delay: 1.15s;
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         left: auto;
         right: 0;
         will-change: right, left;
@@ -866,7 +866,7 @@ nav ul a span.badge {
     }
 }
 
-@include rtl{
+/*:host-context([dir="rtl"]) & {
   @keyframes indeterminate{
     0% {
       left: 100%;
@@ -881,7 +881,7 @@ nav ul a span.badge {
       right:100%;
     }
   }
-}
+}*/
 
 @keyframes indeterminate-short {
     0% {
@@ -898,7 +898,7 @@ nav ul a span.badge {
     }
 }
 
-@include rtl{
+/*:host-context([dir="rtl"]) & {
   @keyframes indeterminate-short {
       0% {
         left: 107%;
@@ -913,7 +913,7 @@ nav ul a span.badge {
         right: 100%;
       }
   }
-}
+}*/
 
 
 /*******************
@@ -928,14 +928,14 @@ nav ul a span.badge {
 .left-align {
   text-align: left;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     text-align: right;
   }
 }
 .right-align {
   text-align: right;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     text-align: left;
   }
 }
@@ -946,14 +946,14 @@ nav ul a span.badge {
 .left {
   float: left !important;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     float: right !important;
   }
 }
 .right {
   float: right !important;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     float: left !important;
   }
 }

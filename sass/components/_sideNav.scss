@@ -16,7 +16,7 @@
   backface-visibility: hidden;
   transform: translateX(-105%);
 
-  @include rtl {
+  :host-context([dir="rtl"]) &  {
     right: 0;
     transform: translateX(100%);
     transform: translateX(105%);
@@ -31,7 +31,7 @@
     left: auto;
     transform: translateX(100%);
 
-    @include rtl {
+    :host-context([dir="rtl"]) &  {
       left: 0;
       transform: translateX(-100%);
       transform: translateX(-105%);
@@ -85,7 +85,7 @@
     width: $sidenav-item-height / 2;
     color: rgba(0,0,0,.54);
 
-    @include rtl {
+    :host-context([dir="rtl"]) &  {
       float: right;
       margin: 0 0 0 ($sidenav-padding * 2);
     }
@@ -173,7 +173,7 @@
   transform: translateX(0);
   position: fixed;
 
-  @include rtl {
+  :host-context([dir="rtl"]) &  {
     right: 0;
     left: auto;
   }
@@ -183,7 +183,7 @@
     right: 0;
     left: auto;
 
-      @include rtl {
+      :host-context([dir="rtl"]) &  {
         left: 0;
         right: auto;
       }
@@ -196,14 +196,14 @@
     &.fixed {
       transform: translateX(-105%);
       
-      @include rtl {
+      :host-context([dir="rtl"]) &  {
         transform: translateX(105%);
       }
 
       &.right-aligned {
         transform: translateX(105%);
 
-        @include rtl {
+        :host-context([dir="rtl"]) &  {
           transform: translateX(-105%);
         }
       }

@@ -6,7 +6,7 @@ form p {
   margin-bottom: 10px;
   text-align: left;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     text-align: right;
   }
 }
@@ -22,7 +22,7 @@ form p:last-child {
   left: -9999px;
   opacity: 0;
 
-  @include rtl{
+  :host-context([dir="rtl"]) & {
     left: auto;
     right: -9999px;
   }
@@ -40,7 +40,7 @@ form p:last-child {
     line-height: 25px;
     font-size: 1rem;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       padding-left: 0;
       padding-right: 35px;
     }
@@ -66,7 +66,7 @@ form p:last-child {
     margin-top: 2px;
     transition: .2s;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 0;
     }
@@ -106,7 +106,7 @@ form p:last-child {
     backface-visibility: hidden;
     transform-origin: 100% 100%;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 10px;
     }
@@ -133,7 +133,7 @@ form p:last-child {
     backface-visibility: hidden;
     transform-origin: 100% 100%;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 24px;
     }
@@ -162,7 +162,7 @@ form p:last-child {
     transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
     z-index: 1;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 0;
       transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, right .20s .1s;
@@ -182,7 +182,7 @@ form p:last-child {
     -webkit-transform-origin: 20% 40%;
     transform-origin: 100% 100%;
 
-    @include rtl{
+    :host-context([dir="rtl"]) & {
       left: auto;
       right: 6px;
     }
@@ -211,7 +211,7 @@ form p:last-child {
       -webkit-transform: rotateZ(37deg);
       transform: rotateZ(37deg);
 
-      @include rtl{
+      :host-context([dir="rtl"]) & {
         left: auto;
         right: 10px;
       }
