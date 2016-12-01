@@ -1,5 +1,5 @@
 /*!
- * Materialize v0.97.8 (http://materializecss.com)
+ * Materialize vundefined (http://materializecss.com)
  * Copyright 2014-2015 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -352,6 +352,61 @@ Materialize.elementOrParentIsFixed = function(element) {
     });
     return isFixed;
 };
+
+
+/**
+ * Get time in ms
+ * @license https://raw.github.com/jashkenas/underscore/master/LICENSE
+ * @type {function}
+ * @return {number}
+ */
+var getTime = (Date.now || function () {
+  return new Date().getTime();
+});
+
+
+/**
+ * Returns a function, that, when invoked, will only be triggered at most once
+ * during a given window of time. Normally, the throttled function will run
+ * as much as it can, without ever going more than once per `wait` duration;
+ * but if you'd like to disable the execution on the leading edge, pass
+ * `{leading: false}`. To disable execution on the trailing edge, ditto.
+ * @license https://raw.github.com/jashkenas/underscore/master/LICENSE
+ * @param {function} func
+ * @param {number} wait
+ * @param {Object=} options
+ * @returns {Function}
+ */
+Materialize.throttle = function(func, wait, options) {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  options || (options = {});
+  var later = function () {
+    previous = options.leading === false ? 0 : getTime();
+    timeout = null;
+    result = func.apply(context, args);
+    context = args = null;
+  };
+  return function () {
+    var now = getTime();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0) {
+      clearTimeout(timeout);
+      timeout = null;
+      previous = now;
+      result = func.apply(context, args);
+      context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+};
+
 
 // Velocity has conflicts when loaded with jQuery, this will check for it
 // First, check if in noConflict mode
@@ -1048,7 +1103,11 @@ if (jQuery) {
         }
 
         // Set css on origin
-        origin.css({position: 'absolute', 'z-index': 1000})
+        origin.css({
+          position: 'absolute',
+          'z-index': 1000,
+          'will-change': 'left, top, width, height'
+        })
         .data('width', originalWidth)
         .data('height', originalHeight);
 
@@ -1216,7 +1275,8 @@ if (jQuery) {
                 width: '',
                 'max-width': '',
                 position: '',
-                'z-index': ''
+                'z-index': '',
+                'will-change': ''
               });
 
               // Remove class
@@ -2173,376 +2233,419 @@ $(document).ready(function(){
         return toast;
     }
 };
-;(function ($) {
+;(function($) {
 
-  var methods = {
-    init : function(options) {
-      var defaults = {
-        menuWidth: 300,
-        edge: 'left',
-        closeOnClick: false,
-        draggable: true
-      };
-      options = $.extend(defaults, options);
+    var methods = {
+        init: function(options) {
+            var defaults = {
+                menuWidth: 300,
+                edge: 'left',
+                closeOnClick: false,
+                draggable: true
+            };
+            options = $.extend(defaults, options);
+            var dir = $("html").attr('dir');
 
-      $(this).each(function(){
-        var $this = $(this);
-        var menu_id = $("#"+ $this.attr('data-activates'));
+            $(this).each(function() {
+                dir = $("html").attr('dir');
+                var $this = $(this);
+                var menu_id = $("#" + $this.attr('data-activates'));
 
-        // Set to width
-        if (options.menuWidth != 300) {
-          menu_id.css('width', options.menuWidth);
-        }
-
-        // Add Touch Area
-        var $dragTarget;
-        if (options.draggable) {
-          $dragTarget = $('<div class="drag-target"></div>').attr('data-sidenav', $this.attr('data-activates'));
-          $('body').append($dragTarget);
-        } else {
-          $dragTarget = $();
-        }
-
-        if (options.edge == 'left') {
-          menu_id.css('transform', 'translateX(-100%)');
-          $dragTarget.css({'left': 0}); // Add Touch Area
-        }
-        else {
-          menu_id.addClass('right-aligned') // Change text-alignment to right
-            .css('transform', 'translateX(100%)');
-          $dragTarget.css({'right': 0}); // Add Touch Area
-        }
-
-        // If fixed sidenav, bring menu out
-        if (menu_id.hasClass('fixed')) {
-            if (window.innerWidth > 992) {
-              menu_id.css('transform', 'translateX(0)');
-            }
-          }
-
-        // Window resize to reset on large screens fixed
-        if (menu_id.hasClass('fixed')) {
-          $(window).resize( function() {
-            if (window.innerWidth > 992) {
-              // Close menu if window is resized bigger than 992 and user has fixed sidenav
-              if ($('#sidenav-overlay').length !== 0 && menuOut) {
-                removeMenu(true);
-              }
-              else {
-                // menu_id.removeAttr('style');
-                menu_id.css('transform', 'translateX(0%)');
-                // menu_id.css('width', options.menuWidth);
-              }
-            }
-            else if (menuOut === false){
-              if (options.edge === 'left') {
-                menu_id.css('transform', 'translateX(-100%)');
-              } else {
-                menu_id.css('transform', 'translateX(100%)');
-              }
-
-            }
-
-          });
-        }
-
-        // if closeOnClick, then add close event for all a tags in side sideNav
-        if (options.closeOnClick === true) {
-          menu_id.on("click.itemclick", "a:not(.collapsible-header)", function(){
-            removeMenu();
-          });
-        }
-
-        var removeMenu = function(restoreNav) {
-          panning = false;
-          menuOut = false;
-          // Reenable scrolling
-          $('body').css({
-            overflow: '',
-            width: ''
-          });
-
-          $('#sidenav-overlay').velocity({opacity: 0}, {duration: 200,
-              queue: false, easing: 'easeOutQuad',
-            complete: function() {
-              $(this).remove();
-            } });
-          if (options.edge === 'left') {
-            // Reset phantom div
-            $dragTarget.css({width: '', right: '', left: '0'});
-            menu_id.velocity(
-              {'translateX': '-100%'},
-              { duration: 200,
-                queue: false,
-                easing: 'easeOutCubic',
-                complete: function() {
-                  if (restoreNav === true) {
-                    // Restore Fixed sidenav
-                    menu_id.removeAttr('style');
+                // Set to width
+                if (options.menuWidth != 300) {
                     menu_id.css('width', options.menuWidth);
-                  }
                 }
 
-            });
-          }
-          else {
-            // Reset phantom div
-            $dragTarget.css({width: '', right: '0', left: ''});
-            menu_id.velocity(
-              {'translateX': '100%'},
-              { duration: 200,
-                queue: false,
-                easing: 'easeOutCubic',
-                complete: function() {
-                  if (restoreNav === true) {
-                    // Restore Fixed sidenav
-                    menu_id.removeAttr('style');
-                    menu_id.css('width', options.menuWidth);
-                  }
+                // Add Touch Area
+                var $dragTarget;
+                if (options.draggable) {
+                    $dragTarget = $('<div class="drag-target"></div>').attr('data-sidenav', $this.attr('data-activates'));
+                    $('body').append($dragTarget);
+                } else {
+                    $dragTarget = $();
                 }
-              });
-          }
-        };
+
+                if (options.edge == 'left') {
+                    menu_id.css('transform', 'translateX(-100%)');
+                    if (dir == 'rtl') { menu_id.css('transform', 'translateX(105%)'); }
+                    $dragTarget.css({ 'left': 0 }); // Add Touch Area
+                    if (dir == 'rtl') { $dragTarget.css({ 'left': '', right: 0 }); }
+                }
+                else {
+                    menu_id.addClass('right-aligned') // Change text-alignment to right
+                        .css('transform', 'translateX(100%)');
+                    $dragTarget.css({ 'right': 0 }); // Add Touch Area
+                    if (dir == 'rtl') {
+                        menu_id.css('transform', 'translateX(100%)');
+                        $dragTarget.css({ 'right': '', left: 0 });
+                    }
+
+                }
+
+                // If fixed sidenav, bring menu out
+                if (menu_id.hasClass('fixed')) {
+                    if (window.innerWidth > 992) {
+                        transValue = 'translateX(0)';
+                        menu_id.css('transform', transValue);
+                    }
+                }
+
+                // Window resize to reset on large screens fixed
+                if (menu_id.hasClass('fixed')) {
+                    $(window).resize(function() {
+                        if (window.innerWidth > 992) {
+                            // Close menu if window is resized bigger than 992 and user has fixed sidenav
+                            if ($('#sidenav-overlay').length !== 0 && menuOut) {
+                                removeMenu(true);
+                            }
+                            else {
+                                // menu_id.removeAttr('style');
+                                menu_id.css('transform', 'translateX(0%)');
+                                //if (dir == 'rtl') { menu_id.css('transform', 'translateX(100%)'); }
+                                // menu_id.css('width', options.menuWidth);
+                            }
+                        }
+                        else if (menuOut === false) {
+                            if (options.edge === 'left') {
+                                menu_id.css('transform', 'translateX(-100%)');
+                                if (dir == 'rtl') { menu_id.css('transform', 'translateX(100%)'); }
+                            } else {
+                                menu_id.css('transform', 'translateX(100%)');
+                                if (dir == 'rtl') { menu_id.css('transform', 'translateX(100%)'); }
+                            }
+
+                        }
+
+                    });
+                }
+
+                // if closeOnClick, then add close event for all a tags in side sideNav
+                if (options.closeOnClick === true) {
+                    menu_id.on("click.itemclick", "a:not(.collapsible-header)", function() {
+                        removeMenu();
+                    });
+                }
+
+                var removeMenu = function(restoreNav) {
+                    dir = $("html").attr('dir');
+                    panning = false;
+                    menuOut = false;
+                    // Reenable scrolling
+                    $('body').css({
+                        overflow: '',
+                        width: ''
+                    });
+
+                    $('#sidenav-overlay').velocity({ opacity: 0 }, {
+                        duration: 200,
+                        queue: false, easing: 'easeOutQuad',
+                        complete: function() {
+                            $(this).remove();
+                        }
+                    });
+                    if (options.edge === 'left') {
+                        // Reset phantom div
+                        translateXValue = '-100%';
+                        $dragTarget.css({ width: '', right: '', left: '0' });
+                        if (dir == 'rtl') {
+                            translateXValue = '100%';
+                            $dragTarget.css({ width: '', right: '0', left: '' });
+                        }
+                        menu_id.velocity(
+                            { 'translateX': translateXValue },
+                            {
+                                duration: 200,
+                                queue: false,
+                                easing: 'easeOutCubic',
+                                complete: function() {
+                                    if (restoreNav === true) {
+                                        // Restore Fixed sidenav
+                                        menu_id.removeAttr('style');
+                                        menu_id.css('width', options.menuWidth);
+                                    }
+                                }
+
+                            });
+                    }
+                    else {
+                        // Reset phantom div
+                        translateXValue = '100%';
+                        $dragTarget.css({ width: '', right: '0', left: '' });
+                        if (dir == 'rtl') {
+                            translateXValue = '100%';
+                            $dragTarget.css({ width: '', right: '', left: '0' });
+                        }
+                        menu_id.velocity(
+                            { 'translateX': translateXValue },
+                            {
+                                duration: 200,
+                                queue: false,
+                                easing: 'easeOutCubic',
+                                complete: function() {
+                                    if (restoreNav === true) {
+                                        // Restore Fixed sidenav
+                                        menu_id.removeAttr('style');
+                                        menu_id.css('width', options.menuWidth);
+                                    }
+                                }
+                            });
+                    }
+                };
 
 
 
-        // Touch Event
-        var panning = false;
-        var menuOut = false;
+                // Touch Event
+                var panning = false;
+                var menuOut = false;
 
-        if (options.draggable) {
-          $dragTarget.on('click', function(){
-            if (menuOut) {
-              removeMenu();
-            }
-          });
+                if (options.draggable) {
+                    $dragTarget.on('click', function() {
+                        if (menuOut) {
+                            removeMenu();
+                        }
+                    });
 
-          $dragTarget.hammer({
-            prevent_default: false
-          }).bind('pan', function(e) {
+                    $dragTarget.hammer({
+                        prevent_default: false
+                    }).bind('pan', function(e) {
 
-            if (e.gesture.pointerType == "touch") {
+                        if (e.gesture.pointerType == "touch") {
 
-              var direction = e.gesture.direction;
-              var x = e.gesture.center.x;
-              var y = e.gesture.center.y;
-              var velocityX = e.gesture.velocityX;
+                            var direction = e.gesture.direction;
+                            var x = e.gesture.center.x;
+                            var y = e.gesture.center.y;
+                            var velocityX = e.gesture.velocityX;
 
-              // Disable Scrolling
-              var $body = $('body');
-              var $overlay = $('#sidenav-overlay');
-              var oldWidth = $body.innerWidth();
-              $body.css('overflow', 'hidden');
-              $body.width(oldWidth);
+                            // Disable Scrolling
+                            var $body = $('body');
+                            var $overlay = $('#sidenav-overlay');
+                            var oldWidth = $body.innerWidth();
+                            $body.css('overflow', 'hidden');
+                            $body.width(oldWidth);
 
-              // If overlay does not exist, create one and if it is clicked, close menu
-              if ($overlay.length === 0) {
-                $overlay = $('<div id="sidenav-overlay"></div>');
-                $overlay.css('opacity', 0).click( function(){
-                  removeMenu();
+                            // If overlay does not exist, create one and if it is clicked, close menu
+                            if ($overlay.length === 0) {
+                                $overlay = $('<div id="sidenav-overlay"></div>');
+                                $overlay.css('opacity', 0).click(function() {
+                                    removeMenu();
+                                });
+                                $('body').append($overlay);
+                            }
+
+                            // Keep within boundaries
+                            if (options.edge === 'left') {
+                                if (x > options.menuWidth) { x = options.menuWidth; }
+                                else if (x < 0) { x = 0; }
+                            }
+
+                            if (options.edge === 'left') {
+                                // Left Direction
+                                if (x < (options.menuWidth / 2)) { menuOut = false; }
+                                // Right Direction
+                                else if (x >= (options.menuWidth / 2)) { menuOut = true; }
+                                menu_id.css('transform', 'translateX(' + (x - options.menuWidth) + 'px)');
+                            }
+                            else {
+                                // Left Direction
+                                if (x < (window.innerWidth - options.menuWidth / 2)) {
+                                    menuOut = true;
+                                }
+                                // Right Direction
+                                else if (x >= (window.innerWidth - options.menuWidth / 2)) {
+                                    menuOut = false;
+                                }
+                                var rightPos = (x - options.menuWidth / 2);
+                                if (rightPos < 0) {
+                                    rightPos = 0;
+                                }
+
+                                menu_id.css('transform', 'translateX(' + rightPos + 'px)');
+                            }
+
+
+                            // Percentage overlay
+                            var overlayPerc;
+                            if (options.edge === 'left') {
+                                overlayPerc = x / options.menuWidth;
+                                $overlay.velocity({ opacity: overlayPerc }, { duration: 10, queue: false, easing: 'easeOutQuad' });
+                            }
+                            else {
+                                overlayPerc = Math.abs((x - window.innerWidth) / options.menuWidth);
+                                $overlay.velocity({ opacity: overlayPerc }, { duration: 10, queue: false, easing: 'easeOutQuad' });
+                            }
+                        }
+
+                    }).bind('panend', function(e) {
+
+                        if (e.gesture.pointerType == "touch") {
+                            var $overlay = $('<div id="sidenav-overlay"></div>');
+                            var velocityX = e.gesture.velocityX;
+                            var x = e.gesture.center.x;
+                            var leftPos = x - options.menuWidth;
+                            var rightPos = x - options.menuWidth / 2;
+                            if (leftPos > 0) {
+                                leftPos = 0;
+                            }
+                            if (rightPos < 0) {
+                                rightPos = 0;
+                            }
+                            panning = false;
+
+                            if (options.edge === 'left') {
+                                // If velocityX <= 0.3 then the user is flinging the menu closed so ignore menuOut
+                                if ((menuOut && velocityX <= 0.3) || velocityX < -0.5) {
+                                    // Return menu to open
+                                    if (leftPos !== 0) {
+                                        menu_id.velocity({ 'translateX': [0, leftPos] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                                    }
+
+                                    $overlay.velocity({ opacity: 1 }, { duration: 50, queue: false, easing: 'easeOutQuad' });
+                                    $dragTarget.css({ width: '50%', right: 0, left: '' });
+                                    menuOut = true;
+                                }
+                                else if (!menuOut || velocityX > 0.3) {
+                                    // Enable Scrolling
+                                    $('body').css({
+                                        overflow: '',
+                                        width: ''
+                                    });
+                                    // Slide menu closed
+                                    menu_id.velocity({ 'translateX': [-1 * options.menuWidth - 10, leftPos] }, { duration: 200, queue: false, easing: 'easeOutQuad' });
+                                    $overlay.velocity({ opacity: 0 }, {
+                                        duration: 200, queue: false, easing: 'easeOutQuad',
+                                        complete: function() {
+                                            $(this).remove();
+                                        }
+                                    });
+                                    $dragTarget.css({ width: '10px', right: '', left: 0 });
+                                }
+                            }
+                            else {
+                                if ((menuOut && velocityX >= -0.3) || velocityX > 0.5) {
+                                    // Return menu to open
+                                    if (rightPos !== 0) {
+                                        menu_id.velocity({ 'translateX': [0, rightPos] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                                    }
+
+                                    $overlay.velocity({ opacity: 1 }, { duration: 50, queue: false, easing: 'easeOutQuad' });
+                                    $dragTarget.css({ width: '50%', right: '', left: 0 });
+                                    menuOut = true;
+                                }
+                                else if (!menuOut || velocityX < -0.3) {
+                                    // Enable Scrolling
+                                    $('body').css({
+                                        overflow: '',
+                                        width: ''
+                                    });
+
+                                    // Slide menu closed
+                                    menu_id.velocity({ 'translateX': [options.menuWidth + 10, rightPos] }, { duration: 200, queue: false, easing: 'easeOutQuad' });
+                                    $overlay.velocity({ opacity: 0 }, {
+                                        duration: 200, queue: false, easing: 'easeOutQuad',
+                                        complete: function() {
+                                            $(this).remove();
+                                        }
+                                    });
+                                    $dragTarget.css({ width: '10px', right: 0, left: '' });
+                                }
+                            }
+
+                        }
+                    });
+                }
+
+                $this.click(function() {
+                    if (menuOut === true) {
+                        menuOut = false;
+                        panning = false;
+                        removeMenu();
+                    }
+                    else {
+
+                        // Disable Scrolling
+                        var $body = $('body');
+                        var $overlay = $('<div id="sidenav-overlay"></div>');
+                        var oldWidth = $body.innerWidth();
+                        $body.css('overflow', 'hidden');
+                        $body.width(oldWidth);
+
+                        // Push current drag target on top of DOM tree
+                        $('body').append($dragTarget);
+
+                        if (options.edge === 'left') {
+                            $dragTarget.css({ width: '50%', right: 0, left: '' });
+                            menu_id.velocity({ 'translateX': [0, -1 * options.menuWidth] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                            if (dir == 'rtl') {
+                                $dragTarget.css({ width: '50%', right: '', left: 0 });
+                                menu_id.velocity({ 'translateX': [0, options.menuWidth] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                            }
+                        }
+                        else {
+                            $dragTarget.css({ width: '50%', right: '', left: 0 });
+                            menu_id.velocity({ 'translateX': [0, options.menuWidth] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                            if (dir == 'rtl') {
+                                $dragTarget.css({ width: '50%', right: 0, left: '' });
+                                menu_id.velocity({ 'translateX': [0, -1 * options.menuWidth] }, { duration: 300, queue: false, easing: 'easeOutQuad' });
+                            }
+                        }
+
+                        $overlay.css('opacity', 0)
+                            .click(function() {
+                                menuOut = false;
+                                panning = false;
+                                removeMenu();
+                                $overlay.velocity({ opacity: 0 }, {
+                                    duration: 300, queue: false, easing: 'easeOutQuad',
+                                    complete: function() {
+                                        $(this).remove();
+                                    }
+                                });
+
+                            });
+                        $('body').append($overlay);
+                        $overlay.velocity({ opacity: 1 }, {
+                            duration: 300, queue: false, easing: 'easeOutQuad',
+                            complete: function() {
+                                menuOut = true;
+                                panning = false;
+                            }
+                        });
+                    }
+
+                    return false;
                 });
-                $('body').append($overlay);
-              }
-
-              // Keep within boundaries
-              if (options.edge === 'left') {
-                if (x > options.menuWidth) { x = options.menuWidth; }
-                else if (x < 0) { x = 0; }
-              }
-
-              if (options.edge === 'left') {
-                // Left Direction
-                if (x < (options.menuWidth / 2)) { menuOut = false; }
-                // Right Direction
-                else if (x >= (options.menuWidth / 2)) { menuOut = true; }
-                menu_id.css('transform', 'translateX(' + (x - options.menuWidth) + 'px)');
-              }
-              else {
-                // Left Direction
-                if (x < (window.innerWidth - options.menuWidth / 2)) {
-                  menuOut = true;
-                }
-                // Right Direction
-                else if (x >= (window.innerWidth - options.menuWidth / 2)) {
-                 menuOut = false;
-               }
-                var rightPos = (x - options.menuWidth / 2);
-                if (rightPos < 0) {
-                  rightPos = 0;
-                }
-
-                menu_id.css('transform', 'translateX(' + rightPos + 'px)');
-              }
+            });
 
 
-              // Percentage overlay
-              var overlayPerc;
-              if (options.edge === 'left') {
-                overlayPerc = x / options.menuWidth;
-                $overlay.velocity({opacity: overlayPerc }, {duration: 10, queue: false, easing: 'easeOutQuad'});
-              }
-              else {
-                overlayPerc = Math.abs((x - window.innerWidth) / options.menuWidth);
-                $overlay.velocity({opacity: overlayPerc }, {duration: 10, queue: false, easing: 'easeOutQuad'});
-              }
-            }
-
-          }).bind('panend', function(e) {
-
-            if (e.gesture.pointerType == "touch") {
-              var $overlay = $('<div id="sidenav-overlay"></div>');
-              var velocityX = e.gesture.velocityX;
-              var x = e.gesture.center.x;
-              var leftPos = x - options.menuWidth;
-              var rightPos = x - options.menuWidth / 2;
-              if (leftPos > 0 ) {
-                leftPos = 0;
-              }
-              if (rightPos < 0) {
-                rightPos = 0;
-              }
-              panning = false;
-
-              if (options.edge === 'left') {
-                // If velocityX <= 0.3 then the user is flinging the menu closed so ignore menuOut
-                if ((menuOut && velocityX <= 0.3) || velocityX < -0.5) {
-                  // Return menu to open
-                  if (leftPos !== 0) {
-                    menu_id.velocity({'translateX': [0, leftPos]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-                  }
-
-                  $overlay.velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
-                  $dragTarget.css({width: '50%', right: 0, left: ''});
-                  menuOut = true;
-                }
-                else if (!menuOut || velocityX > 0.3) {
-                  // Enable Scrolling
-                  $('body').css({
-                    overflow: '',
-                    width: ''
-                  });
-                  // Slide menu closed
-                  menu_id.velocity({'translateX': [-1 * options.menuWidth - 10, leftPos]}, {duration: 200, queue: false, easing: 'easeOutQuad'});
-                  $overlay.velocity({opacity: 0 }, {duration: 200, queue: false, easing: 'easeOutQuad',
-                    complete: function () {
-                      $(this).remove();
-                    }});
-                  $dragTarget.css({width: '10px', right: '', left: 0});
-                }
-              }
-              else {
-                if ((menuOut && velocityX >= -0.3) || velocityX > 0.5) {
-                  // Return menu to open
-                  if (rightPos !== 0) {
-                    menu_id.velocity({'translateX': [0, rightPos]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-                  }
-
-                  $overlay.velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
-                  $dragTarget.css({width: '50%', right: '', left: 0});
-                  menuOut = true;
-                }
-                else if (!menuOut || velocityX < -0.3) {
-                  // Enable Scrolling
-                  $('body').css({
-                    overflow: '',
-                    width: ''
-                  });
-
-                  // Slide menu closed
-                  menu_id.velocity({'translateX': [options.menuWidth + 10, rightPos]}, {duration: 200, queue: false, easing: 'easeOutQuad'});
-                  $overlay.velocity({opacity: 0 }, {duration: 200, queue: false, easing: 'easeOutQuad',
-                    complete: function () {
-                      $(this).remove();
-                    }});
-                  $dragTarget.css({width: '10px', right: 0, left: ''});
-                }
-              }
-
-            }
-          });
+        },
+        destroy: function() {
+            var $overlay = $('#sidenav-overlay');
+            var $dragTarget = $('.drag-target[data-sidenav="' + $(this).attr('data-activates') + '"]');
+            $overlay.trigger('click');
+            $dragTarget.remove();
+            $(this).off('click');
+            $overlay.remove();
+        },
+        show: function() {
+            this.trigger('click');
+        },
+        hide: function() {
+            $('#sidenav-overlay').trigger('click');
         }
-
-        $this.click(function() {
-          if (menuOut === true) {
-            menuOut = false;
-            panning = false;
-            removeMenu();
-          }
-          else {
-
-            // Disable Scrolling
-            var $body = $('body');
-            var $overlay = $('<div id="sidenav-overlay"></div>');
-            var oldWidth = $body.innerWidth();
-            $body.css('overflow', 'hidden');
-            $body.width(oldWidth);
-
-            // Push current drag target on top of DOM tree
-            $('body').append($dragTarget);
-
-            if (options.edge === 'left') {
-              $dragTarget.css({width: '50%', right: 0, left: ''});
-              menu_id.velocity({'translateX': [0, -1 * options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-            }
-            else {
-              $dragTarget.css({width: '50%', right: '', left: 0});
-              menu_id.velocity({'translateX': [0, options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-            }
-
-            $overlay.css('opacity', 0)
-            .click(function(){
-              menuOut = false;
-              panning = false;
-              removeMenu();
-              $overlay.velocity({opacity: 0}, {duration: 300, queue: false, easing: 'easeOutQuad',
-                complete: function() {
-                  $(this).remove();
-                } });
-
-            });
-            $('body').append($overlay);
-            $overlay.velocity({opacity: 1}, {duration: 300, queue: false, easing: 'easeOutQuad',
-              complete: function () {
-                menuOut = true;
-                panning = false;
-              }
-            });
-          }
-
-          return false;
-        });
-      });
-
-
-    },
-    destroy: function () {
-      var $overlay = $('#sidenav-overlay');
-      var $dragTarget = $('.drag-target[data-sidenav="' + $(this).attr('data-activates') + '"]');
-      $overlay.trigger('click');
-      $dragTarget.remove();
-      $(this).off('click');
-      $overlay.remove();
-    },
-    show : function() {
-      this.trigger('click');
-    },
-    hide : function() {
-      $('#sidenav-overlay').trigger('click');
-    }
-  };
+    };
 
 
     $.fn.sideNav = function(methodOrOptions) {
-      if ( methods[methodOrOptions] ) {
-        return methods[ methodOrOptions ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-      } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-        // Default to "init"
-        return methods.init.apply( this, arguments );
-      } else {
-        $.error( 'Method ' +  methodOrOptions + ' does not exist on jQuery.sideNav' );
-      }
+        if (methods[methodOrOptions]) {
+            return methods[methodOrOptions].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof methodOrOptions === 'object' || !methodOrOptions) {
+            // Default to "init"
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error('Method ' + methodOrOptions + ' does not exist on jQuery.sideNav');
+        }
     }; // Plugin end
-}( jQuery ));
+} (jQuery));
 ;/**
  * Extend jquery with a scrollspy plugin.
  * This watches the window scroll and fires events when elements are scrolled into viewport.
@@ -2650,57 +2753,6 @@ $(document).ready(function(){
 		jWindow.trigger('scrollSpy:winSize');
 	}
 
-	/**
-	 * Get time in ms
-   * @license https://raw.github.com/jashkenas/underscore/master/LICENSE
-	 * @type {function}
-	 * @return {number}
-	 */
-	var getTime = (Date.now || function () {
-		return new Date().getTime();
-	});
-
-	/**
-	 * Returns a function, that, when invoked, will only be triggered at most once
-	 * during a given window of time. Normally, the throttled function will run
-	 * as much as it can, without ever going more than once per `wait` duration;
-	 * but if you'd like to disable the execution on the leading edge, pass
-	 * `{leading: false}`. To disable execution on the trailing edge, ditto.
-	 * @license https://raw.github.com/jashkenas/underscore/master/LICENSE
-	 * @param {function} func
-	 * @param {number} wait
-	 * @param {Object=} options
-	 * @returns {Function}
-	 */
-	function throttle(func, wait, options) {
-		var context, args, result;
-		var timeout = null;
-		var previous = 0;
-		options || (options = {});
-		var later = function () {
-			previous = options.leading === false ? 0 : getTime();
-			timeout = null;
-			result = func.apply(context, args);
-			context = args = null;
-		};
-		return function () {
-			var now = getTime();
-			if (!previous && options.leading === false) previous = now;
-			var remaining = wait - (now - previous);
-			context = this;
-			args = arguments;
-			if (remaining <= 0) {
-				clearTimeout(timeout);
-				timeout = null;
-				previous = now;
-				result = func.apply(context, args);
-				context = args = null;
-			} else if (!timeout && options.trailing !== false) {
-				timeout = setTimeout(later, remaining);
-			}
-			return result;
-		};
-	};
 
 	/**
 	 * Enables ScrollSpy using a selector
@@ -2738,7 +2790,7 @@ $(document).ready(function(){
 		offset.bottom = options.offsetBottom || 0;
 		offset.left = options.offsetLeft || 0;
 
-		var throttledScroll = throttle(function() {
+		var throttledScroll = Materialize.throttle(function() {
 			onScroll(options.scrollOffset);
 		}, options.throttle || 100);
 		var readyScroll = function(){
@@ -2808,7 +2860,7 @@ $(document).ready(function(){
 		options = options || {
 			throttle: 100
 		};
-		return jWindow.on('resize', throttle(onWinSize, options.throttle || 100));
+		return jWindow.on('resize', Materialize.throttle(onWinSize, options.throttle || 100));
 	};
 
 	/**
@@ -4651,49 +4703,52 @@ $(document).ready(function(){
 }( jQuery ));
 ;(function($) {
 
+  var scrollFireEventsHandled = false;
+
   // Input: Array of JSON objects {selector, offset, callback}
-
   Materialize.scrollFire = function(options) {
+    var onScroll = function() {
+      var windowScroll = window.pageYOffset + window.innerHeight;
 
-    var didScroll = false;
+      for (var i = 0 ; i < options.length; i++) {
+        // Get options from each line
+        var value = options[i];
+        var selector = value.selector,
+            offset = value.offset,
+            callback = value.callback;
 
-    window.addEventListener("scroll", function() {
-      didScroll = true;
-    });
+        var currentElement = document.querySelector(selector);
+        if ( currentElement !== null) {
+          var elementOffset = currentElement.getBoundingClientRect().top + window.pageYOffset;
 
-    // Rate limit to 100ms
-    setInterval(function() {
-      if(didScroll) {
-          didScroll = false;
-
-          var windowScroll = window.pageYOffset + window.innerHeight;
-
-          for (var i = 0 ; i < options.length; i++) {
-            // Get options from each line
-            var value = options[i];
-            var selector = value.selector,
-                offset = value.offset,
-                callback = value.callback;
-
-            var currentElement = document.querySelector(selector);
-            if ( currentElement !== null) {
-              var elementOffset = currentElement.getBoundingClientRect().top + window.pageYOffset;
-
-              if (windowScroll > (elementOffset + offset)) {
-                if (value.done !== true) {
-                  if (typeof(callback) === 'function') {
-                    callback.call(this, currentElement);
-                  } else if (typeof(callback) === 'string') {
-                    var callbackFunc = new Function(callback);
-                    callbackFunc(currentElement);
-                  }
-                  value.done = true;
-                }
+          if (windowScroll > (elementOffset + offset)) {
+            if (value.done !== true) {
+              if (typeof(callback) === 'function') {
+                callback.call(this, currentElement);
+              } else if (typeof(callback) === 'string') {
+                var callbackFunc = new Function(callback);
+                callbackFunc(currentElement);
               }
+              value.done = true;
             }
           }
+        }
       }
-    }, 100);
+    };
+
+
+    var throttledScroll = Materialize.throttle(function() {
+      onScroll();
+    }, options.throttle || 100);
+
+    if (!scrollFireEventsHandled) {
+      window.addEventListener("scroll", throttledScroll);
+      window.addEventListener("resize", throttledScroll);
+      scrollFireEventsHandled = true;
+    }
+
+    // perform a scan once, after current execution context, and after dom is ready
+    setTimeout(throttledScroll, 0);
   };
 
 })(jQuery);
@@ -7340,7 +7395,7 @@ Picker.extend( 'pickadate', DatePicker )
 
       return this.each(function() {
 
-        var images, offset, center, pressed, dim, count,
+        var images, item_width, offset, center, pressed, dim, count,
             reference, referenceY, amplitude, target, velocity,
             xform, frame, timestamp, ticker, dragged, vertical_dragged;
         var $indicators = $('<ul class="indicators"></ul>');
@@ -7396,7 +7451,9 @@ Picker.extend( 'pickadate', DatePicker )
             }
 
             // Handle clicks on indicators.
-            $indicator.click(function () {
+            $indicator.click(function (e) {
+              e.stopPropagation();
+
               var index = $(this).index();
               cycleTo(index);
             });
@@ -7711,8 +7768,16 @@ Picker.extend( 'pickadate', DatePicker )
         });
 
 
-
-        window.onresize = scroll;
+        $(window).on('resize.carousel', function() {
+          if (options.full_width) {
+            item_width = view.find('.carousel-item').first().innerWidth();
+            dim = item_width * 2 + options.padding;
+            offset = center * 2 * item_width;
+            target = offset;
+          } else {
+            scroll();
+          }
+        });
 
         setupEvents();
         scroll(offset);
@@ -7721,7 +7786,7 @@ Picker.extend( 'pickadate', DatePicker )
           if (n === undefined) {
             n = 1;
           }
-          target = offset + dim * n;
+          target = (dim * Math.round(offset / dim)) + (dim * n);
           if (offset !== target) {
             amplitude = target - offset;
             timestamp = Date.now();
@@ -7733,7 +7798,7 @@ Picker.extend( 'pickadate', DatePicker )
           if (n === undefined) {
             n = 1;
           }
-          target = offset - dim * n;
+          target = (dim * Math.round(offset / dim)) - (dim * n);
           if (offset !== target) {
             amplitude = target - offset;
             timestamp = Date.now();
