@@ -190,8 +190,8 @@
   }
 }
 
-// Fixed sideNav hide on smaller
-@media #{$medium-and-down} {
+// Fixed sideNav hide on small
+@media #{$small-and-down} {
   .side-nav {
     &.fixed {
       transform: translateX(-105%);
